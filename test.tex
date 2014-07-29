@@ -1,0 +1,1034 @@
+
+
+
+\documentclass[12pt,a4paper,notitlepage]{report}
+
+\usepackage[top=20mm,bottom=20mm,left=25mm,right=25mm]{geometry}
+
+\usepackage{comment}
+\excludecomment{justyouwait}
+
+\usepackage{showkeys}
+
+\makeatletter
+\newcommand*{\textoverline}[1]{$\overline{\hbox{#1}}\m@th$}
+\makeatother
+
+\newcommand \la {\left\langle}
+\newcommand \ra {\right\rangle}
+
+\newcommand \bla {\left\{\begin{array}{l} }
+\newcommand \ela {\end{array}\right. }
+
+\newcommand \Z {\mathbb{Z}}
+\newcommand \N {\mathbb{N}}
+\newcommand \R {\mathbb{R}}
+\newcommand \C {\mathbb{C}}
+
+\newcommand \p {\partial}
+\newcommand \pp[1] {{\frac{\p}{\p #1}}}
+
+\newcommand \testa {\(x=y\)}
+\newcommand \testb {(Haha's \'u test"  "x" $\hat{K}$ \LaTeX}
+
+\usepackage{amsmath,amssymb,amsfonts}
+
+\usepackage{underbracket}
+
+% For the pstricks pictures to work we need to do dvi -> ps -> pdf 
+\usepackage{pst-all}
+
+\numberwithin{equation}{section}
+
+%\newcommand{\term}[1]{\textbf{#1}}
+\newcommand{\term}[1]{\textbf{\boldmath #1}\index{#1}}
+
+% Beware that page numbers in the index can be wrong by one unit.
+This problem is apparently solved by compiling a large number of times.
+\usepackage{makeidx}
+\makeindex
+\usepackage{tocbibind}
+
+
+\usepackage{amsthm}
+\newtheoremstyle{break}{9pt}{9pt}{\itshape}{}{\bfseries}{}{\newline}{}
+\theoremstyle{break}    
+\newtheorem{exo}{Exercise}[chapter]
+
+% For the following package to work we need to do dvi -> ps -> pdf 
+% urlcolor is set to black because unwanted url links appear in the bibliography
+\usepackage[colorlinks=true,linktoc=all,linkcolor=black,citecolor=red,urlcolor=blue]{hyperref}
+
+%This cures some underfull vboxes.
+%\raggedbottom
+
+\title{\bfseries Conformal field theory on the plane}
+
+\author{Sylvain Ribault \vspace{2mm}
+\\
+{\normalsize CEA Saclay, Institut de Physique Th\'eorique}
+ \\
+ {\footnotesize \ttfamily sylvain.ribault@cea.fr }
+}
+
+
+%\keywords{Quantum field theory, conformal symmetry, conformal bootstrap}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+ 2d CFT, Euclidean, local symmetry.
+Conformal bootstrap method.
+Plane only.
+simple models: minimal models, $c\geq 1$ Liouville.
+\end{abstract}
+
+ \tableofcontents
+\hypersetup{linkcolor=blue}
+
+%\begin{justyouwait}
+
+\addtocounter{chapter}{-1}
+
+\testa
+
+\testb
+
+$\pp{\alpha\beta}$
+$\pp{\a\b\c\d\e\f\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z}$
+% \g causes a bug!
+
+\term{alpha $\alpha$}
+\term{group $SL_2(\C)$}
+\term{group $\mathbb{C}$}
+
+\chapter{Introduction \label{secintr}}
+
+\section{Quantum field theory \label{secqft} }
+
+Conformal field theory is a special case of \term{quantum sdf"field theory's $x'$}, and we start with a brief reminder of what quantum field theory is.
+
+\subsection{Definition} 
+
+A \term{theory} can be either a general framework such as quantum field theory or general relativity, or a more specific \term{model} such as the standard model of particle physics or Liouville theory.
+The standard model is formulated in the framework of quantum field theory, so we can call it a model of quantum field theory or simply a quantum field theory.
+Similarly, Liouville theory is a conformal field theory.
+A model need not be directly related to a \term{physical system}: a given physical system can be described by several models, and a given model can describe a number (possibly zero) of physical systems.
+This holds not only for physical systems, but also for what can be called theoretical systems, such as quantum gravity in $d$ dimensions.
+These notions are illustrated by the following examples:
+\begin{center}
+ \psset{unit = .5cm}
+\pspicture[](30,11.5)
+\rput[c](5,11){Theories}
+\rput[c](13.5,11){Models}
+\rput[c](25,11){Systems}
+\psline(0,10.3)(30,10.3)
+\rput[l](0,8){\psframebox{
+\pspicture[](0,-1.6)(19,1.6)
+\rput[l](0,0){Newtonian mechanics}
+\rput[c](13,1){\rnode{ss}{\psframebox{Spinning solid}}}
+\rput[c](13,-1){\rnode{gb}{\psframebox{Gravitating bodies}}} 
+\endpspicture
+}}
+\rput[l](0,5){\psframebox{
+\pspicture[](0,-.6)(19,.6)
+\rput[l](0,0){General relativity}
+\rput[c](13,0){\rnode{rgb}{\psframebox{Relativistic gravitating bodies}}}
+\endpspicture
+}}
+\rput[l](0,2){\psframebox{
+\pspicture[](0,-1.6)(19,1.6)
+\rput[l](0,0){Conformal field theory}
+\rput[c](13,1){\rnode{mm}{\psframebox{minimal model}}}
+\rput[c](13,-1){\rnode{lt}{\psframebox{Liouville theory}}} 
+\endpspicture
+}}
+\rput[c](25,9){\rnode{st}{\psframebox{Spinning top}}}
+\ncline[linestyle = dashed]{ss}{st}
+\rput[c](25,6.5){\rnode{ssy}{\psframebox{Solar system}}}
+\nccurve[linestyle = dashed,angleA=180]{ssy}{gb}
+\nccurve[linestyle = dashed,angleA=180]{ssy}{rgb}
+\rput[c](25,1){\rnode{str}{\psframebox{2d string}}}
+\nccurve[linestyle = dashed,angleA=180]{str}{lt}
+\rput[c](25,2.5){\rnode{qg}{\psframebox{2d quantum geometry}}}
+\nccurve[linestyle = dashed,angleA=180]{qg}{lt}
+\endpspicture
+\end{center}
+
+Now, what is a \term{quantum} theory? First, this is a probabilistic theory, which does not predict the outcome of a given experiment, but the probabilities of different outcomes.
+Second, a quantum theory does not predict just probabilities, but actually probability amplitudes.
+Such amplitudes can be added, giving rise to interferences. 
+
+Last, the \term{field} in field theory is a variable defined on some space, which can describe an arbitrary number of particles propagating in that space.
+In particular, field theories can describe the creation and annihilation of particles.
+For example, a "height of water" field can be defined on the surface of the ocean, in order to describe arbitrary numbers of water waves.
+A field can in some respects be thought of as an infinite collection of elementary objects: in our example, individual waves of definite wavelengths.
+Field theory constrains how these objects behave in relation with the underlying space, for instance by requiring interactions to be local.
+
+So, quantum field theory is particularly well-suited to predicting the outcomes of collisions of particles, whether in the cosmos or in a particle accelerator.
+Such collisions can indeed create or destroy particles, so we need a field theory, and repeating the same collision can produce various outcomes, so we need a probabilistic theory. 
+
+\subsection{Observable quantities}
+
+In a model, we call \term{observables} the quantities which can in principle be measured.
+The nature of the observables is in general dictated by the theory.
+For instance, in the theory of general relativity, the observables are light signals and motions of objects, and do not include the space-time metric.
+For a model to make useful predictions for a physical system, we need some observables to be deducible from measurements in the system.
+Which observables are relevant greatly depends on the physical system.
+To take an example from our subject of two-dimensional conformal field theory, functions on the two-dimensional space can be observables if that space is itself a model for physical reality, as in applications to condensed-matter physics or to quantum geometry, but not if that space is the world-sheet of a string in string theory. 
+In quantum field theory in general, and in conformal field theory in particular, we define the observables to be 
+\begin{itemize}
+ \item the spectrum and
+\item the correlation functions.
+\end{itemize}
+
+In quantum theory, the \term{spectrum} or \term{space of states} is a vector space whose elements represent the states of a system.
+The vector space structure is what leads to interferences.
+A vector $\sigma$ and the action $A(\sigma)$ of an operator $A$ on $\sigma$ may be written as 
+\begin{align}
+\bla
+ \sigma = |\sigma\rangle\ , \\ A(\sigma) = A|\sigma\rangle = |A\sigma\rangle\ .
+\ela
+\end{align}
+Moreover, the spectrum has a sesquilinear \term{scalar product}, so that the product $\langle \tau|\sigma \rangle$ of two states can be interpreted as a probability amplitude.
+This product satisfies
+\begin{align}
+\langle \tau| \lambda_1\sigma_1+\lambda_2\sigma_2\rangle &= \lambda_1 \langle \tau|\sigma_1\rangle + \lambda_2\langle \tau|\sigma_2\rangle\ ,
+\\
+\langle \tau|\sigma \rangle &= \overline{\langle \sigma|\tau\rangle}\ .
+\end{align}
+The \term{Hermitian conjugate} $A^\dagger$ of a linear operator $A$ is then defined by
+\begin{align}
+ \langle \tau | A \sigma\rangle = \langle A^\dagger \tau | \sigma\rangle\ .
+\label{lld}
+\end{align}
+If the scalar product is positive definite, then the spectrum is a \term{Hilbert space}.
+This is a necessary condition for the theory to have a direct probabilistic interpretation.
+
+Now, in quantum field theory, to each state $|\sigma\rangle$ and each point $x$ in space we associate a linear operator on the spectrum $V_\sigma(x)$, and the collection of these operators when $x$ varies is a field. 
+This is called the \term{state-field correspondence} or state-operator correspondence.
+Thinking of the state as a type of particles, the field $V_\sigma(x)$ can be thought of as measuring the presence of such particles at point $x$.
+Then, a \term{correlation function}, here an \term{$n$-point function}
+\begin{align}
+\la \prod_{i=1}^n V_{\sigma_i}(x_i)\ra
+\label{pva}
+\end{align}
+is the probability amplitude for the interaction of $n$ particles of types $\sigma_1,\cdots \sigma_n$, located at points $x_1,\cdots x_n$. 
+
+To \term{construct a model} of quantum field theory is therefore to give principles which uniquely determine a spectrum and a set of correlation functions.
+To \term{solve a model} is to actually compute the spectrum and correlation functions. 
+
+\section{The bootstrap method}
+
+\subsection{Principles \label{secprin}}
+
+The \term{bootstrap method} is a method for constructing and solving theories, based on the systematic exploitation of 
+\begin{enumerate}
+ \item symmetry assumptions,
+ \item consistency conditions,
+\end{enumerate}
+For example, the symmetry assumption of general covariance is the basis of the theory of general relativity, and the further symmetry assumptions of homogeneity and isotropy of the universe are used in constructing models of cosmology.
+In quantum theories, an essential consistency condition is the condition that the sum of the probabilities of all possible events is one. 
+
+Given a set of assumptions, there may exist any number of models which obey them:
+\begin{itemize}
+ \item no model at all, if the assumptions are too restrictive,
+\item one model, in which case we may be able to solve it,
+\item a manageable number of models, in which case we may be able to classify them, and to focus on one of them by making further assumptions,
+\item a huge number of models, if the assumptions are not restrictive enough.
+\end{itemize}
+We will now explore in turn the symmetry assumptions and consistency conditions in quantum field theory. 
+
+\subsection{Symmetry assumptions \label{secsa}}
+
+If a model of quantum field theory has a symmetry algebra, then the spectrum $S$ must have a decomposition into representations of this algebra:
+\begin{align}
+ S = \bigoplus_R m_R \ R\ ,\
+\label{somr}
+\end{align}
+where the number $m_R \in \N\cup\{\infty\}$ is the \term{multiplicity} of the representation $R$ of the algebra in the spectrum $S$.
+A state $\sigma$ in the spectrum can then be written as 
+\begin{align}
+ \sigma = (R,v)\ ,
+\label{arv}
+\end{align}
+where $v$ is a state in the representation $R$.
+Due to the state-field correspondence, we can write $V_\sigma(x)= V_{(R,v)}(x)$.
+Schematically, the dependence of a correlation function $\la \prod_{i=1}^n V_{(R_i,v_i)}(x_i)\ra$ on $v_i$ is determined by symmetry considerations, whereas the dependence on $R_i$ must be determined by consistency conditions.
+Some technical assumptions are necessary for this statement to hold.
+Without going into details, let us mention that for the dependence on $v_i$ to be completely determined by symmetry, $R_i$ must be an \term{indecomposable representation}, which cannot be written as a direct sum of smaller representations.
+\begin{align}
+ R \ indecomposable \quad \Leftrightarrow \quad \nexists R',R'' \neq 0 \quad | \quad R = R'\oplus R''\ .
+\end{align}
+In particular, any \term{irreducible representation}, which by definition does not have a nontrivial subrepresentation, is indecomposable,
+\begin{align}
+ R \ irreducible \quad \Leftrightarrow \quad \nexists R' \neq 0,R \quad | \quad R'\subset R\ .
+\end{align}
+(See Exercise \ref{exoirr} for an example of an indecomposable representation which is not irreducible.)
+
+We will therefore distinguish two types of data:
+\begin{itemize}
+ \item \term{universal data}, which are also called 
+model-independent or algebraic data.
+This is the information on representations of the symmetry algebra, which determines in particular the $v_i$-dependence of correlation functions.
+Universal data in conformal field theory, such as conformal blocks, will be studied in Chapter \ref{secccs}. 
+\item \term{model-dependent data}, which encode how the spectrum and correlation functions of a particular model are built from the universal data.
+This includes the multiplicities $m_R$, which encode how the spectrum is built from representations, and the structure functions, which encode how correlation functions are built from conformal blocks.
+We will study these data 
+in Chapter \ref{seccbm}.  
+\end{itemize}
+Which data are  universal or model-dependent depends on the choice of a symmetry algebra.
+If a model's symmetry algebra $\mathcal{A}$ is actually a subalgebra of a larger symmetry algebra $\mathcal{A}'$, then the representations of $\mathcal{A}$ which appear in the spectrum
+must combine into representations of the larger algebra $\mathcal{A}'$.
+Which combinations can appear is universal data of $\mathcal{A}'$, but model-dependent data from the point of view of the smaller algebra $\mathcal{A}$. 
+
+Since a field theory is defined on some space, we can distinguish two types of symmetries: 
+\begin{itemize}
+ \item \term{space-time symmetries}, which act on that space,
+\item \term{internal symmetries}, which do not.
+\end{itemize}
+Space-time symmetries include in particular the invariances under rotations and translations.
+Internal symmetries include gauge invariances.
+The distinction between space-time and internal symmetries depends on the choice of the space: for example, supersymmetry can be an internal or space-time symmetry depending on whether the theory is formulated on an ordinary space or on a superspace.
+
+\subsection{Consistency conditions \label{seccc}}
+
+The consistency conditions on the correlation functions $\la\prod_{i=1}^n V_{\sigma_i}(x_i)\ra$ are derived from assumptions on the fields $V_{\sigma_i}(x_i)$.
+These assumptions are:
+\begin{enumerate}
+ \item \textbf{Commutativity}\index{commutativity} or locality: 
+\begin{align}
+ \boxed{V_{\sigma_1}(x_1)V_{\sigma_2}(x_2) = V_{\sigma_2}(x_2) V_{\sigma_1}(x_1)}\ ,
+\label{comm}
+\end{align}
+is supposed to hold provided $(x_1,x_2)$ obey some condition.
+In Minkowski space for instance, $x_1-x_2$ is supposed to be space-like.
+In the two-dimensional Eucliden space, the condition is $x_1\neq x_2$.
+\item \textbf{Associativity}\index{associativity}: 
+\begin{align}
+ \boxed{\left(V_{\sigma_1}(x_1)V_{\sigma_2}(x_2)\right) V_{\sigma_3}(x_3) = V_{\sigma_1}(x_1)  \left(V_{\sigma_2}(x_2) V_{\sigma_3}(x_3)\right)}\ .
+\label{asso}
+\end{align}
+Together with commutativity, this implies that the ordering of fields in correlation functions is indifferent.
+\item Existence of an \term{OPE} (operator product expansion):
+\begin{align}
+ \boxed{V_{\sigma_1}(x_1)V_{\sigma_2}(x_2) = \sum_{\sigma\in S} C_{\sigma_1,\sigma_2}^{\sigma}(x_1,x_2) V_{\sigma}(x_2)}\ ,
+\label{ope}
+\end{align}
+where the \term{OPE coefficient} $C_{\sigma_1,\sigma_2}^{\sigma}(x_1,x_2)$ is a function (i.e.
+not a field), and the sum is over a basis of the spectrum $S$.
+The existence of an OPE is a consequence of the state-field correspondence: to a basis of the spectrum $S$, a basis $(V_{\sigma}(x_2))_{\sigma\in S}$ of the space of fields must correspond, and the field 
+$V_{\sigma_1}(x_1)V_{\sigma_2}(x_2)$ can be expanded in that basis.
+Our choice of that basis for writing the OPE is not the only possible choice, as for any point $x$ we have a basis $(V_{\sigma}(x))_{\sigma\in S}$.  
+\end{enumerate}
+Our assumptions do not include the existence of a vacuum state, a frequently encountered axiom of quantum field theory, which we will however not need. 
+
+Let us now study how these assumptions constrain the correlation functions. (See Exercise \ref{exoten} for similar calculations in a technically simpler context.) By performing multiple OPEs, an $n$-point function (with $n\geq 3$) can always be reduced to a combination of two-point functions, for instance
+\begin{align}
+ \la \prod_{i=1}^4 V_{\sigma_i}(x_i) \ra = \sum_{\sigma\in S} C_{\sigma_1,\sigma_2}^{\sigma}(x_1,x_2)\sum_{\sigma'\in S} C_{\sigma,\sigma_3}^{\sigma'}(x_2,x_3)\la V_{\sigma'}(x_3)V_{\sigma_4}(x_4)\ra\ .
+\end{align}
+We could go further and reduce the two-point function to a sum of one-point functions.
+This is however unnecessary, because conformal symmetry will determine the two-point function, so that we can consider it a known quantity.
+So, in order to compute correlation functions, all we need to know (in addition to the spectrum $S$) is the OPE coefficient $C_{\sigma_1,\sigma_2}^{\sigma}(x_1,x_2)$.
+But this quantity is itself strongly constrained by the associativity assumption (\ref{asso}), which implies
+\begin{align}
+ \sum_{\sigma_s\in S} C_{\sigma_1,\sigma_2}^{\sigma_s}(x_1,x_2) C_{\sigma_s,\sigma_3}^{\sigma_4}(x_2,x_3) = \sum_{\sigma_t\in S} C_{\sigma_1,\sigma_t}^{\sigma_4}(x_1,x_3)C_{\sigma_2,\sigma_3}^{\sigma_t}(x_2,x_3)\ ,
+\label{cccc}
+\end{align}
+for any choice of the four states $(\sigma_1,\sigma_2,\sigma_3,\sigma_4)$.
+(See Exercise \ref{exocccc}.) This condition can be represented schematically as 
+\begin{align}
+\sum_{s} 
+ \psset{unit=.3cm}
+\pspicture[shift=-5](-6,-6)(6,5)
+\psline(0,-4)(0,-1)(-4,3)
+\psline(0,3)(-2,1)(0,-1)(4,3)
+\rput[c](-4,4){$1$}
+\rput[c](0,4){$2$}
+\rput[c](4,4){$3$}
+\rput[c](0,-5){$4$}
+\rput[c](-1.5,-.5){$s$}
+\endpspicture
+= \quad
+\sum_{t} 
+\pspicture[shift=-5](-6,-6)(6,5)
+\psline(0,-4)(0,-1)(4,3)
+\psline(0,3)(2,1)(0,-1)(-4,3)
+\rput[c](-4,4){$1$}
+\rput[c](0,4){$2$}
+\rput[c](4,4){$3$}
+\rput[c](0,-5){$4$}
+\rput[c](1.5,-.5){$t$}
+\endpspicture
+\label{sdsd}
+\end{align}
+where each node corresponds to an OPE coefficient. 
+
+The OPE coefficients can be determined by solving the associativity condition (\ref{cccc}), provided the model has enough symmetry for 
+\begin{itemize}
+ \item constraining the dependence of the OPE coefficient $C_{\sigma_1,\sigma_2}^{\sigma}(x_1,x_2)$ on $(x_1,x_2)$, and
+\item decomposing the spectrum $S$ into a reasonable number of representations.
+\end{itemize}
+These conditions are fulfilled in certain Conformal Field Theories.
+In particular, as we will see in Chapter \ref{secccs}, conformal symmetry is enough for determining the $x$-dependence of OPE coefficients. 
+
+For the moment, let us show how symmetry constraints can simplify the associativity condition.
+We recall that a state $\sigma\in S$ can be written as $\sigma=(R,v)$ as in eq. (\ref{arv}), where $R$ is an indecomposable representation of the symmetry algebra and $v\in R$.
+Symmetry constraints lead to equations for the OPE coefficient 
+$C_{\sigma_1,\sigma_2}^{\sigma_3}(x_1,x_2)$, which have two general properties:
+\begin{itemize}
+ \item The symmetry equations for the OPE coefficient are linear.
+\item A symmetry equation may have terms with different values of the parameters $v_i$ and $x_i$, but it involves only one value of each of the parameters $R_i$, as by definition the action of a symmetry transformation on a state $v_i\in R_i$ is another state in the same representation. 
+\end{itemize}
+Therefore, an OPE coefficient can be decomposed into universal and model-dependent data as
+\begin{align}
+ C_{\sigma_1,\sigma_2}^{\sigma_3}(x_1,x_2) = \sum_{\lambda=1}^{N_{R_1R_2}^{R_3}} C_{R_1,R_2}^{R_3,\lambda}(x_1,x_2) f_{R_1,R_2}^{R_3,\lambda}(v_1,v_2,v_3|x_1,x_2)\ ,
+\label{clcf}
+\end{align}
+where $C_{R_1,R_2}^{R_3,\lambda}(x_1,x_2)$ is a model-dependent \term{structure function}, and 
+the universal quantity $f_{R_1,R_2}^{R_3,\lambda}(v_i|x_j)$ is a solution of the symmetry equations, which for given values of $R_i$ should be understood as equations on the space of functions of $(v_i,x_j)$.
+The index $\lambda$ labels elements of a basis of solutions of the symmetry equations.
+The number $N_{R_1R_2}^{R_3}\in \N \cup \{\infty\}$ of independent solutions is the \term{fusion multiplicity}, which can be encoded in the \term{fusion product} or \term{fusion rule},
+\begin{align}
+ R_1 \times R_2  = \sum_{R_3} N_{R_1R_2}^{R_3} R_3 \ . 
+\label{rrnr}
+\end{align}
+The fusion product is a representation-theoretic notion which encodes some of the universal properties of the OPE.
+In particular, the field $V_{\sigma_3}$ can appear in a $V_{\sigma_1}V_{\sigma_2}$ OPE only if $N_{R_1R_2}^{R_3}\neq 0$.
+The fusion product $R_1\times R_2$ is said to have nontrivial multiplicities if $N_{R_1R_2}^{R_3}\geq 2$ for some $R_3$, and trivial multiplicities if $N_{R_1R_2}^{R_3}\in \{0,1\}$, in which case the sum over $\lambda$ in eq. (\ref{clcf}) can be omitted.
+A field is called a \term{simple current} if the corresponding representation $R$ is such that $R\times R'$ is indecomposable for any $R'$, so that $\sum_{R''} N_{RR'}^{R''} =1$. 
+These notions can be made rigorous: it is actually possible to define an associative product of representations, such that eq. (\ref{rrnr}) is the decomposition of the representation $R_1\times R_2$ into indecomposable representations. 
+
+Using the decomposition (\ref{clcf}) of the OPE coefficients, 
+the left-hand side of the 
+associativity equation (\ref{cccc}) becomes
+\begin{multline}
+ \sum_{\sigma_s\in S} C_{\sigma_1,\sigma_2}^{\sigma_s}(x_1,x_2) C_{\sigma_s,\sigma_3}^{\sigma_4}(x_2,x_3) 
+= \sum_{R_s}\sum_{\lambda=1}^{N_{R_1R_2}^{R_s}} \sum_{\mu=1}^{N_{R_sR_3}^{R_4}} C_{R_1,R_2}^{R_s,\lambda}(x_1,x_2) C_{R_s,R_3}^{R_4,\mu}(x_2,x_3)
+\\ 
+\times 
+\mathcal{F}^{R_s,\lambda,\mu}_{R_1,R_2,R_3,R_4}(v_1,v_2,v_3,v_4|x_1,x_2,x_3)\ ,
+\label{scce}
+\end{multline}
+where we define 
+\begin{align}
+ \mathcal{F}^{R_s,\lambda,\mu}_{R_1,R_2,R_3,R_4}(v_1,v_2,v_3,v_4|x_1,x_2,x_3) = \sum_{v_s\in R_s} f_{R_1,R_2}^{R_s,\lambda}(v_1,v_2,v_s|x_1,x_2) f_{R_s,R_3}^{R_4,\mu}(v_s,v_3,v_4|x_2,x_3) \ .
+\end{align}
+This universal object is a sum over the states $v_s$ in a representation $R_s$ -- just like the character of $R_s$, or the conformal blocks which we will introduce in Section \ref{secaco}.
+Assuming this object is known, the sum over $\sigma_s=(R_s,v_s)$ in the associativity equation therefore reduces to a sum over $R_s$.
+If the symmetry algebra is large enough or the model simple enough, the number of representations $R_s$ in the spectrum can be small enough for the associativity equation to become tractable.
+In this case, the structure functions $C_{R_1,R_2}^{R_3,\lambda}(x_1,x_2)$ can be determined, and all the correlation functions computed, so that the model is solved.
+To summarize,
+\begin{center}
+\fbox{
+\begin{minipage}{0.9\textwidth}
+OPE coefficients obey linear equations from symmetry and quadratic equations (\ref{cccc}) from consistency.
+The numbers of OPE coefficients, consistency equations, and terms in these equations, are determined by the dimension of the spectrum and are therefore in general very large.
+With the help of symmetry, these numbers can be reduced to the number of representations in the spectrum.
+\end{minipage}
+}
+\end{center}
+
+
+\subsection{So what is the Lagrangian of your model? \label{seclagr}}
+
+In order to construct and to solve conformal field theories, we will only use the bootstrap method.
+In quantum field theory, this method is much less widely used than the Lagrangian method, which is based on functional integrals over spaces of fields.
+In two-dimensional conformal field theory, however, the bootstrap method is particularly effective, while the Lagrangian method is often needlessly complicated, lacking in rigor, or downright not applicable. 
+There are nevertheless cases when the Lagrangian method is useful, in particular for 
+\begin{enumerate}
+\item suggesting, and sometimes proving, the existence of conformal field theories,
+\item  and analyzing their classical limits, when such limits exist. 
+\end{enumerate}
+
+In the Lagrangian method, correlation functions are represented as functional integrals
+\begin{align}
+ \la\prod_{i=1}^n V_{\sigma_i}(x_i)\ra = \int D\phi\ e^{\int dx L[\phi](x)} \ \prod_{i=1}^n \tilde{V}_{\sigma_i}[\phi](x_i)\ ,
+\end{align}
+where  
+\begin{itemize}
+ \item the integration variable is the fundamental field (or set of fields) $\phi(x)$,
+\item the \term{Lagrangian} $L[\phi](x)$ of the model is a functional of $\phi(x)$,
+\item the functional $\tilde{V}_{\sigma_i}[\phi](x_i)$ of $\phi(x)$ corresponds to the field $ V_{\sigma_i}(x_i)$,
+\item the integration measure $D\phi$ is usually characterized by axioms on functional integrals. 
+\end{itemize}
+An important advantage of the Lagrangian method is the existence of the Lagrangian itself, a relatively simple object which is not tied to any specific correlation function and encodes much information about the model.
+The Lagrangian is the most common, but not the only object of this type: in certain integrable models or supersymmetric quantum field theories, much information is encoded in the geometry of a spectral curve.
+
+In the Lagrangian method, we are thus in principle given all the correlation functions of a specific model from the start.
+What we do not a priori know are the symmetry properties of the model.
+Of course, we may try to choose the Lagrangian in order to ensure that certain symmetries are present.
+However, the symmetries of the model also depend on the integration measure.
+Axioms requiring functional integrals to behave as ordinary integrals often leave no choice for the integration measure, and 
+it can happen that a transformation leaves the Lagrangian invariant, but changes the integration measure.
+This transformation is then called anomalous, and is not a symmetry of the model.
+
+Such an anomaly can also be described as a symmetry of the classical theory, which is not present in the corresponding quantum theory.
+This is because the Lagrangian method can be interpreted as the quantization of the classical theory which is defined by the Lagrangian.
+The classical theory consists in the dynamics of the fundamental field, subject to the equations of motion associated with the Lagrangian, 
+\begin{align}
+ \frac{\delta }{\delta \phi(x')} \int dx L[\phi](x) = 0 \ ,
+\end{align}
+ where $\frac{\delta}{\delta\phi(x') } $ is a functional derivative.
+The integration measure then contains the additional information which is necessary for building a quantum theory form the classical theory. 
+
+This contrasts with the bootstrap method, which does not assume a classical theory to exist.
+Models constructed with the bootstrap method nevertheless sometimes have one or several classical limits.
+If such a limit coincides with some classical theory, then the model may be called a quantization of that theory, even though it is not constructed from the classical theory through a quantization procedure. 
+
+\section{Conformal symmetry in two dimensions \label{secconf}}
+
+Our subject of two-dimensional conformal field theory is defined by the existence of a space-time symmetry, namely local conformal invariance. 
+We consider a two-dimensional space, and assume it comes equipped with a \term{metric}.
+The metric plays very little role in conformal field theory, because conformal invariance will allow us to fix it once and for all.
+But we need the metric in order to explain what conformal invariance is.
+We assume that the metric has Euclidean signature, not considering the other option that it is Minkowskian.
+The Euclidean signature brings important technical simplifications, and does not necessarily prevent the observables from having an interpretation in Minkowski space after analytic continuation.
+
+\subsection{Global conformal transformations\label{secglob}}
+
+Let us assume that the metric is the flat two-dimensional Euclidean metric, which we write in terms of complex coordinates $x=(z,\bar{z})$,
+\begin{align}
+ ds^2 = dz d\bar{z} \ .
+\end{align}
+A transformation $(z,\bar{z}) \mapsto (f(z),\overline{f(z)})$ leaves the metric invariant, provided $ds^2 = dfd\bar{f}$.  
+Our metric is invariant under the familiar \term{translations} and \term{rotations},
+\begin{align}
+f_\mathrm{ translation}(z) &= z+b \ ,
+\\ 
+f_\mathrm{ rotation}(z) &=a z \ , \ |a|=1\ ,
+\end{align}
+where $a$ and $b$ are complex constants.
+Moreover, if we lift the restriction $|a|=1$ in rotations, we obtain transformations which do not leave the metric invariant, but rescale it by a factor of $|a|^2$.
+For $a\in\R$, these tranformations are called \term{dilatations} or \term{scale transformations},
+\begin{align}
+ f_\mathrm{ dilatation}(z) &= a z\ , \ a\in \R\ .
+\end{align}
+While the laws of physics are (mostly) invariant under translations and rotations, they are manifestly not invariant under scale tranformations, and the structures of matter and of the universe are strongly scale-dependent.
+It is nevertheless interesting to study scale-invariant models, for at least two reasons.
+Firstly, some particular systems are invariant under scale transformations, for instance certain materials at critical points.
+Secondly, by rescaling a quantum field theory to very small or large scales in a controlled way, one often reaches a scale-invariant theory (called a fixed point of the renormalization group flow).
+That new theory can be nontrivial, and helpful for the understanding of the original theory.
+
+It may seem reasonable to study quantum field theories which are invariant under translations, rotations and dilatations. 
+But in order to have access to the powerful methods and results which are the subject of this review, we actually need much more symmetry assumptions.
+The surprising fact is that many interesting systems do obey these further assumptions, which follow neither from the invariances under translations, rotations and dilatations, nor in many cases from physically compelling reasons.
+We will mostly justify these further assumptions by formal considerations, which are not physically or mathematically unavoidable. 
+
+A first formal consideration is that translations, rotations and dilatations are all \term{conformal transformations}, that is transformations which preserve angles, and therefore which rescale the metric by a real factor.
+But they are not the only conformal transformations: another one is the inversion
+\begin{align}
+ f_\mathrm{ inversion}(z) = \frac{1}{z}\ .
+\end{align}
+It may seem unwise to take this transformation as a symmetry, as it is singular at $z=0$.
+This is however not a problem, if we enlarge our space with the addition of a point at $z=\infty$.
+This actually amounts to compactifying the space, and working not on the complex plane but on the \term{Riemann sphere}.
+This does not even prevent us from studying models on the complex plane, as such models are equivalent to models on the sphere, with one field inserted at $z=\infty$.
+Combining the inversion with translations, rotations and dilatations, we obtain the group of the \term{global conformal transformations} of the Riemann sphere,
+\begin{align}
+ \boxed{f_\mathrm{ global\ conformal}(z)  = \frac{az+b}{cz+d}}\ ,
+\end{align}
+and this group is isomorphic to the group $PSL_2(\C)=\frac{SL_2(\C)}{\Z_2}$ of the complex matrices $g$ of size $2$ and determinant one where $g$ and $-g$ are identified, through the map
+\begin{align}
+ g = \left(\begin{array}{cc} a & b \\ c & d \end{array}\right) \in SL_2(\C) \quad \longmapsto\quad f_g(z) = \frac{az+b}{cz+d}\ .
+\label{gisl}
+\end{align}
+(See Exercise \ref{exoiso}.) 
+
+
+\subsection{Local conformal transformations \label{secloc}}
+
+Actually, any holomorphic function $h(z)$ defines a conformal transformation,
+\begin{align}
+ f_\mathrm{ local\ conformal}(z) = h(z) \ , \ h(z)\ \mathrm{ holomorphic}\ , 
+\label{flc}
+\end{align}
+which transforms the metric into $dfd\bar{f} = |h'(z)|^2 dzd\bar{z}$, and is therefore angle-preserving.
+One may object that the only holomorphic functions on the sphere are the functions $f_g$ (\ref{gisl}) which encode the global conformal transformations.
+And indeed, any further conformal transformation must have singularities, and cannot be one-to-one.
+We could be content with considering transformations which would be defined only on some region.
+We will adopt a different point of view, and interpret a singularity of $h(z)$ at $z=z_0$ as meaning that a field $V_\sigma(z_0)$ transforms non-trivially.
+This makes sense not only with a correlation function $\la V_{\sigma}(z_0)\cdots \ra $ which manifestly involves a field at $z=z_0$, 
+but also with arbitrary correlation functions.
+We can indeed always assume the presence at $z_0$ of a trivial field, called the identity field, which can however become non-trivial after a conformal transformation is performed.
+To summarize,
+\begin{center}
+\fbox{
+\begin{minipage}{0.9\textwidth}
+Global conformal transformations move fields around, local conformal transformations modify them in addition.
+\end{minipage}
+}
+\end{center}
+So, we assume that the symmetries include the infinitely many independent \term{local conformal transformations}, in addition to the global conformal transformations, which are parametrized by the six real coordinates of $PSL_2(\C)$.
+Let us now describe the mathematical structure of the resulting space of all conformal transformations.
+This space is an infinite-dimensional \term{Lie group}, which must include $PSL_2(\C)$.
+For technical simplicity, we will instead describe the associated \term{Lie algebra} of infinitesimal transformations.
+The structure of this algebra is worked out by considering transformations close to the identity, 
+\begin{align}
+ f_{\epsilon}(z) = z + \epsilon(z) \quad \mathrm{ with} \quad \epsilon(z) = \sum_{n\in\Z} \epsilon_n z^{n+1}\ .
+\label{sen}
+\end{align}
+To each transformation $f_\epsilon$ we associate an infinitesimal differential operator $D_\epsilon$ such that for any function $F(z,\bar{z})$ we have 
+\begin{align}
+ F(f_\epsilon(z),\overline{f_\epsilon(z)}) = \left(1- D_\epsilon -\overline{D_\epsilon} \right)F(z,\bar{z}) + O(\epsilon^2)\ ,
+\label{ffe}
+\end{align}
+and we find
+\begin{align}
+ D_\epsilon = \sum_{n\in \Z} \epsilon_n\ell_n  \quad \mathrm{ where} \quad \boxed{\ell_n= -z^{n+1}\pp{z}} \ .
+\label{elln}
+\end{align}
+The algebra of local conformal transformations, called the \term{Witt algebra}, has the generators $(\ell_n)_{n\in \Z}$ and the relations 
+\begin{align}
+ \boxed{[\ell_n,\ell_m]=(n-m)\ell_{n+m}}\ .
+\end{align}
+The generators $(\ell_{-1},\ell_0,\ell_1)$ correspond to global transformations, and the rest to local transformations. (See Exercise \ref{exomoz}.)
+
+The assumption of local conformal symmetry drastically restricts the dependence of the theory on the metric.
+According to the 
+uniformization theorem, all simply-connected compact two-dimensional orientable smooth manifolds are conformally equivalent.
+This implies that the observables of a conformal field theory on any such manifold can be obtained from their values on the sphere by a change of coordinates.
+The topology of compact two-dimensional orientable smooth manifolds (also called compact \term{Riemann surfaces}) is characterized by a natural number $g$ called the genus, which is the number of holes.
+The sphere, and all simply-connected manifolds, have $g=0$.
+In the next simplest case $g=1$, manifolds are not all conformally equivalent, but any manifold with $g=1$ is conformally equivalent to a torus $\frac{\C}{\Z+\tau\Z}$ for some value of the
+complex structure modulus $\tau \in \C$.
+Similarly, for $g\geq 2$, a conformal field theory depends on the metric only through $3g-3$ complex structure moduli. 
+
+Local conformal symmetry is a natural symmetry assumption in string theory, where the world-sheet metric is an unphysical variable, and in two-dimensional gravity, where we expect background independence.
+The assumption is less natural in models of condensed-matter physics, where only flat metrics are usually considered.
+In any case, \term{local conformal field theories} (theories with local conformal symmetry) should be thought of as exceptional points in the vast and unchartered space of the \term{global conformal field theories}. 
+There are arguments, based on the Lagrangian method, showing that any global conformal field theory satisfying some reasonable assumptions must have local conformal symmetry; but the very assumption of the applicability of the Lagrangian method confines these arguments to a particular subset of models.
+Global conformal field theories without local conformal symmetry are like transcendental numbers: rarely encountered in practice, although overwhelmingly common in principle. 
+
+\subsection{The Virasoro algebra \label{secvir}}
+
+The Witt algebra is actually the case $c=0$ of the \term{Virasoro algebra}, an algebra which depends on a parameter $c$ called the \term{central charge}, and has the commutation relations
+\begin{align}
+ \boxed{[L_n,L_m]=(n-m)L_{n+m} + \frac{c}{12} (n-1)n(n+1) \delta_{n+m,0}}\ , 
+\label{vir}
+\end{align}
+where the \term{central term} $\frac{c}{12} (n-1)n(n+1) \delta_{n+m,0}$ should be understood as the coefficient of an extra generator, which commutes with all $(L_n)_{n\in \Z}$.
+It can be checked that these commutators satisfy the Jacobi identity, and that the Virasoro algebra is the only central extension of the Witt algebra. (See Exercise \ref{exovir}.)
+Notice that the presence of the central term does not affect the generators $L_{-1},L_0,L_1$ of global conformal transformations.
+But the remaining generators lose
+their direct geometrical interpretation as generators of the local conformal transformations.
+
+So we assume that the symmetries of our theory include the Virasoro algebra.
+And we will still make one further symmetry assumption.
+Until now, the coordinates $z$ and $\bar{z}$ of our two-dimensional space were complex conjugates, so that any transformation which acted on $z$ automatically acted in a conjugate way on $\bar{z}$.
+Now it is possible to consider $z$ and $\bar{z}$ as independent coordinates, and allow transformations to act separately on $z$ and $\bar{z}$.
+At the level of the conformal transformations (\ref{ffe}), this means considering the generators $\ell_n$ and their complex conjugates $\bar{\ell}_n$ as independent.
+Generalizing to a nonzero central charge, we therefore assume that the symmetry algebra has 
+\begin{itemize}
+ \item \term{left-moving}, \term{chiral} or holomorphic
+generators $L_n$,  and
+\item  \term{right-moving}, \term{anti-chiral} or anti-holomorphic generators $\bar{L}_n$,
+\end{itemize}
+ with
+$[L_n,\bar{L}_m]=0$.
+The generators $(L_n)_{n\in\Z}$ and $(\bar{L}_n)_{n\in\Z}$ are supposed to obey two distinct Virasoro algebras, which we assume have the same central charge, called the central charge of the model. 
+We recapitulate these symmetry algebras in the following table:
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+ \begin{tabular}{|c|c|c|c|}
+ \hline
+Notation &  Name & Generators &  Central\ charge
+\\
+\hline\hline
+ Vir & left-moving & $L_n$ & $c$
+\\
+\hline
+\textoverline{Vir} & right-moving & $\bar{L}_n$ & $c$
+\\
+\hline
+Vir$\times$\textoverline{Vir} & full & $(L_n,\bar{L}_m)$ & $(c,c)$
+\\  
+\hline
+ \end{tabular}
+\end{center}
+Considering $z$ and $\bar{z}$ as independent amounts to complexifying our two-dimensional real space $\C=\R^2$ into the two-dimensional complex space $\C^2$.
+We must however insist that the correlation functions, which are the $z$-dependent observables of the theory, do live on the original space and not on $\C^2$.
+Functions such as $z^\frac12$ may appear at intermediate steps of calculations, but correlation functions can only involve single-valued functions such as $|z|$.
+So, although the space $\C^2$ and the symmetry algebra Vir$\times$\textoverline{Vir}  have factorized forms, the theory itself is not the mere juxtaposition of two independent theories. 
+We thus reach a definition of 
+\begin{center}
+\fbox{
+\begin{minipage}{0.9\textwidth}
+Two-dimensional \term{conformal field theory}: the study of two-dimensional quantum field theories which possess a Vir$\times$ symmetry algebra such that $L_n$ and $\bar{L}_n$ with $|n|\leq 1$ can be interpreted as the generators of global conformal transformations. 
+\end{minipage}
+}
+\end{center}
+The assumption about the geometrical interpretation of $L_n$ and $\bar{L}_n$ with $|n|\leq 1$ is very important, as it is the only link between the symmetry algebra and the two-dimensional space.
+Some conformal field theories have several Virasoro symmetry algebras, only one of which corresponds to conformal symmetry.
+In the free boson theory, it is even possible to find Virasoro algebras with all possible values of the central charge. (See Section \ref{secaua}.)
+
+
+\section{Basic consequences of conformal symmetry}
+
+Having explained and motivated the symmetry assumptions which define two-dimensional conformal field theory, we will explore some of their consequences.
+We will follow the principles of the bootstrap method, as enumerated in Section \ref{secprin}: we will start with the direct consequences of conformal symmetry on the structure of the spectrum, then comment on the form of the consistency conditions in the presence of conformal symmetry, and finally introduce the models which have the simplest spectrums -- minimal models and Liouville theory. 
+
+\subsection{Structure of the spectrum \label{secsots}}
+
+If a model has a Vir$\times$\textoverline{Vir} symmetry algebra, then the spectrum $S$ must have a decomposition into representations of this algebra.
+From any two representations $R,R'$ of Vir, we can build a factorized representation $R\otimes \bar{R'}$ of the full symmetry algebra Vir$\times$\textoverline{Vir}. (The bar in \textoverline{Vir} and $\bar{R'}$ is only meant to distinguished right-moving from left-moving objects, but as algebraic objects we have \textoverline{Vir}$=$Vir and $\bar{R'} = R'$.)
+We assume that the spectrum is a combination of such factorized representations, and the decomposition (\ref{somr}) takes the form
+\begin{align}
+ \boxed{S = \bigoplus_{(R,R')\in Rep(\mathrm{ Vir})^2} m_{R,R'} R\otimes \bar{R'}}\ ,
+\label{sorr}
+\end{align}
+where $Rep(\mathrm{Vir})$ is some set of representations of the Virasoro algebra.
+We introduce two important special cases:
+\begin{itemize}
+\item \term{rational models}, where that sum involves only finitely many nonvanishing terms,
+ \item \term{diagonal models}, where $m_{R,R'}\neq 0 \Rightarrow R=R'$, so that $S=\bigoplus_{R\in Rep(\mathrm{ Vir})} m_R R\otimes \bar{R}$.
+\end{itemize}
+Let us say that the indecomposable representation $R$ of Vir appears in the spectrum if there is some $R'$ such that $m_{R,R'} \neq 0$.
+We introduce the important axiom of 
+\begin{quote}
+\term{closure under fusion}: if the representations $R_1$ and $R_2$ appear in the spectrum, then any representation $R_3$ with a non-vanishing fusion multiplicity $N_{R_1R_2}^{R_3}\neq 0$ also appears in the spectrum. 
+\end{quote}
+This axiom follows from the assumption that if Virasoro symmetry allows a representation of Vir to appear in an OPE, then that representation does appear.
+There are two similar-looking axioms, which should not be adopted:
+\begin{itemize}
+ \item Closure under fusion of Vir$\times$\textoverline{Vir} representations, instead of Vir representations, would rule out most non-trivial models, and in particular diagonal models. 
+\item Closure under tensor product, instead of fusion, would not make sense, as the tensor product of two representations of $\mathrm{ Vir}_c$ is a representation of $\mathrm{ Vir}_{2c}$ -- central charges behave additively in a tensor product. 
+\end{itemize}
+
+In order to characterize the action of the symmetry algebra on the spectrum, we need not only decompose the spectrum into representations of that algebra, but also know how the symmetry generators $L_n$ behave under the scalar product, in other words what are their Hermitian conjugates $L_n^\dagger$.
+We will deduce this from the geometrical interpretation of $L_n$ as a conformal transformation.
+Strictly speaking, this interpretation is only valid at $c=0$, but we will assume that the result does not change if $c\neq 0$.
+So, our expression (\ref{elln}) for $\ell_n$ as a differential operator originated from expanding the infinitesimal parameter $\epsilon(z)$ of a conformal transformation as a Laurent series around $z=0$ as in eq. (\ref{sen}).
+Therefore, as a differential operator, $\ell_n$ acts on the space of analytic functions on $\C-\{0\}$, whose basis is $\{z^p\}_{p\in\Z}$.
+The natural scalar product on this space is 
+\begin{align}
+ \langle f|g\rangle = -\frac{1}{2\pi i}\int_0^{2\pi}d\theta\  \overline{f(e^{i\theta})} \pp{\theta} g(e^{i\theta}) \quad \Rightarrow \quad \langle z^p| z^q \rangle = -p\delta_{p,q}\ .
+\label{fgd}
+\end{align}
+This scalar product, which is a fixed radius integral, comes from the idea of \term{radial quantization}: the radial direction is considered as the time direction, and the dilatation operator $\ell_0$ as the Hamiltonian, which is Hermitian i.e. $\ell_0^\dagger = \ell_0$. (The scalar product is not positive definite, as the states $z^{p>0}$ have negative norms.
+They also have negative energies, due to $\ell_0 z^p = -pz^p$.) Our scalar product is such that $\ell_n^\dagger = \ell_{-n}$ (see Exercise \ref{exolnd}), and we therefore assume
+\begin{align}
+ \boxed{L^\dagger_n = L_{-n}} \ .
+\label{ldn}
+\end{align}
+Conjugates of product operators $\prod_i L_{n_i}$ can then be deduced using the formula
+\begin{align}
+ (AB)^\dagger = B^\dagger A^\dagger\ , 
+\label{abba}
+\end{align}
+which follows from the definition (\ref{lld}) of the hermitian conjugate.
+At the level of the commutator $[A,B]=AB-BA$, this implies
+the rule $[A,B]^\dagger = -[A^\dagger,B^\dagger]$. 
+Using this rule, it is possible to check that eq. (\ref{ldn}) is compatible with the commutation relations (\ref{vir}) provided
+\begin{align}
+ c\in \R\ .
+\label{cir}
+\end{align}
+
+The decomposition of the spectrum $S$ as a sum of Vir$\times$\textoverline{Vir} representations respects the scalar product, and two different irreducible representations belonging to the spectrum must be orthogonal to each other.
+So the question of the positivity of the scalar product can be examined within each representation.
+A representation is called \term{unitary} if it has a positive definite scalar product such that 
+$L^\dagger_n = L_{-n}$, and a model whose spectrum is unitary is itself called unitary. 
+
+The interpretation of $L_0$ as a Hamiltonian in radial quantization suggests that we study the eigenvalues of $L_0$ when acting on the spectrum  $S$ of the model.
+The $L_0$-eigenvalue of an $L_0$-eigenvector is called its \term{conformal dimension} or conformal weight. 
+Interpreting conformal dimensions as energies of states suggests that they
+must be bounded from below.
+Moreover, in any indecomposable representation of the Virasoro algebra, all conformal dimensions differ by integers. (See Exercise \ref{exodiffint}.) This follows from the fact that if 
+two basis states $v_1$ and $v_2$ are related by the action of Virasoro generators,
+\begin{align}
+ v_2 = \left(\prod_i L_{n_i}\right) v_1\ ,
+\label{vovt}
+\end{align}
+and if $v_1$ is an $L_0$-eigenstate with conformal dimension $\Delta_1$, then $v_2$ is also an eigenstate with the conformal dimension
+\begin{align}
+ \Delta_2 = \Delta_1 - \sum_i n_i\ ,
+\label{ddsn}
+\end{align}
+as a consequence of the Virasoro algebra's commutation relations (\ref{vir}).
+This result on the structure of indecomposable representations is interesting because, under reasonable assumptions, the spectrum $S$ can be written as a direct sum of indecomposable representations.
+
+Finally, let us illustrate the power of local conformal symmetry by thinking of a model in terms of global conformal symmetry only. 
+We then decompose each Virasoro representation $R$ into representations of the $\mathfrak{sl}_2$ algebra of global conformal transformations with generators $(L_0,L_1,L_{-1})$,
+\begin{align}
+ R=\bigoplus_{n\in\N} m_{R,n} D_{\Delta+n}\ ,
+\label{rbd}
+\end{align}
+where $m_{R,n}\in \N$ is a multiplicity, $\Delta$ is the lowest $L_0$-eigenvalue of the indecomposable Virasoro representation $R$, and $D_{\Delta+n}$ is a representation of $\mathfrak{sl}_2$ whose lowest $L_0$-eigenvalue is $\Delta+n$.
+(See Exercise \ref{exodis}.)
+The above decomposition is universal data of the Virasoro algebra, and 
+model-dependent information from the point of view of global conformal symmetry.
+This shows how constraining local conformal symmetry is, and how much more freedom there is in the spectrum of global conformal field theories.
+In particular, in a global conformal field theory, there is no reason for the spectrum to contain series of
+$\mathfrak{sl}_2$ representations, whose lowest $L_0$-eigenvalues differ by integers. 
+
+
+\subsection{Conformal bootstrap}
+
+The bootstrap method is particularly powerful 
+when applied to two-dimensional conformal field theories, because such theories have an infinite-dimensional symmetry algebra, so that the spectrum can be decomposed into a small number of large representations.
+Moreover, the factorization of the symmetry algebra into two copies of the Virasoro algebra has important consequences, which we will now sketch. 
+
+Let us study the structure of an OPE coefficient in two-dimensional conformal field theory.
+A state $\sigma\in S$ is written as $\sigma = ((R,R'),(v,v'))$, where $R\otimes \bar{R}'$ is a representation of  Vir$\times$\textoverline{Vir}, with $v\in R$ and $v'\in R'$. 
+A position is written in complex coordinates as $x=(z,\bar{z})$.
+Moreover, the fusion of Virasoro representations has trivial multiplicities, as we will show in Section \ref{secope}. 
+Then the decomposition (\ref{clcf}) of an OPE coefficient into model-dependent and universal data becomes
+\begin{multline}
+ C^{((R_1,R'_1),(v_1,v'_1))}_{((R_2,R'_2),(v_2,v'_2)),((R_3,R'_3),(v_3,v'_3))}((z_1,\bar{z}_1),(z_2,\bar{z}_2)) 
+\\
+= C^{(R_3,R'_3)}_{(R_1,R'_1),(R_2,R'_2)}((z_1,\bar{z}_1),(z_2,\bar{z}_2)) f^{R_3}_{R_1,R_2}(v_1,v_2,v_3|z_1,z_2) f^{R'_3}_{R'_1,R'_2}(v'_1,v'_2,v'_3|\bar{z}_1,\bar{z}_2) \ ,
+\label{ccff}
+\end{multline}
+where $x_i=(z_i,\bar{z}_i)$.
+In words, the universal factor in the OPE coefficient factorizes into holomorphic and antiholomorphic factors, because the symmetry equations for the OPE coefficient factorize into holomorphic equations from the left-moving Virasoro algebra, and antiholomorphic equations from the right-moving Virasoro algebra.
+This is called \term{holomorphic factorization}, where the term ''holomorphic" 
+should be understood as \term{locally holomorphic} i.e. $\bar{z}$-independent: the coefficient $f^{R_3}_{R_1,R_2}(v_1,v_2,v_3|z_1,z_2)$ can have poles and branch cuts as a function of $z_i$.
+We will see in more detail in Section \ref{secaco} how holomorphic factorization simplifies the condition (\ref{cccc}) of OPE associativity.
+
+In two-dimensional conformal field theory, the assumption of the existence of an OPE has a natural generalization: the assumption that on any closed contour $C$, one can insert a decomposition of the identity operator,
+\begin{align}
+ \mathbf{1} = \sum_{\sigma\in S} |\sigma \rangle \langle \sigma| \ ,
+\label{oss}
+\end{align}
+where the sum is over an orthonormal basis of the spectrum.
+Let us schematically explain why this implies the existence of an OPE.
+Considering a contour $C$ around the positions $x_1,x_2$ of two fields $V_{\sigma_1}(x_1),V_{\sigma_2}(x_2)$, and inserting the decomposition of the identity, we obtain
+\begin{align}
+V_{\sigma_1}(x_1)V_{\sigma_2}(x_2)  =  \sum_{\sigma\in S} \la \sigma \left| V_{\sigma_1}(x_1)V_{\sigma_2}(x_2) \right. \ra  V_{\sigma}(x_2) \ ,
+\end{align}
+where we used the state-field correspondence in a cavalier way: we replaced the field $V_{\sigma_1}(x_1)V_{\sigma_2}(x_2)$ with the corresponding state $|V_{\sigma_1}(x_1)V_{\sigma_2}(x_2)\rangle$, and the state $|\sigma\rangle$ with the corresponding field $V_{\sigma}(x_2)$.
+This can be drawn as follows:
+\begin{align}
+\psset{unit = .4cm}
+ \pspicture[shift=-3](-6,-3)(4,3)
+ \psline(-4,2)(1,2)
+\psline(-4,-2)(1,-2)
+\rmultiput{\psline[linestyle=dashed](0,0)(2,0)}(-6,2)(-6,-2)
+\rmultiput{\psbezier(0,-2)(-1,-2)(-1,2)(0,2)\psbezier[linestyle=dashed](0,-2)(1,-2)(1,2)(0,2)}(0,0)(-4,0)
+\rput[r](-1,0){$C$}
+\psarc(1,0){2}{-90}{90}
+\psdots[dotstyle=+,dotangle=45](2.8,.8)(2.8,-.8)
+\rput[l](3,.8){$V_{\sigma_1}$}
+\rput[l](3,-.8){$V_{\sigma_2}$}
+\endpspicture
+\quad
+= \ \ \sum_{\sigma\in S} 
+\quad
+\psset{unit = .4cm}
+ \pspicture[shift=-3](-6,-3)(6,3)
+\psarc(-3,0){2}{-90}{90}
+\pscircle(3,0){2}
+\rput[r](-1.2,0){$V_\sigma$}
+\rput[l](1.2,0){$V_\sigma$}
+\psdots[dotstyle=+,dotangle=45](-1,0)(1,0)
+\rmultiput{\psline(0,0)(1,0)}(-4,2)(-4,-2)
+\rmultiput{\psline[linestyle=dashed](0,0)(2,0)}(-6,2)(-6,-2)
+\rmultiput{\psbezier(0,-2)(-1,-2)(-1,2)(0,2)\psbezier[linestyle=dashed](0,-2)(1,-2)(1,2)(0,2)}(-4,0)
+\psdots[dotstyle=+,dotangle=45](4.8,.8)(4.8,-.8)
+\rput[l](5,.8){$V_{\sigma_1}$}
+\rput[l](5,-.8){$V_{\sigma_2}$}
+\endpspicture
+\end{align}
+We thus obtain an OPE whose coefficient $\la \sigma \left| V_{\sigma_1}(x_1)V_{\sigma_2}(x_2) \right. \ra $ is essentially a three-point correlation function.
+We will see the relation between OPE coefficients and three-point correlation functions in more detail in Section \ref{secope}. 
+
+Inserting the decomposition of the identity (\ref{oss}) on a contour $C$ amounts to cutting the space into two pieces, and in each piece replacing the resulting hole with a \term{puncture} -- an insertion of a field $V_{\sigma}(x)$ for some $x$.
+If we view the space near the contour $C$ as a cylinder, this can be drawn as follows:
+\begin{align}
+\psset{unit = .4cm}
+ \pspicture[shift=-3](-6,-3)(6,3)
+ \psline(-4,2)(4,2)
+\psline(-4,-2)(4,-2)
+\rmultiput{\psline[linestyle=dashed](0,0)(2,0)}(-6,2)(4,2)(-6,-2)(4,-2)
+\rmultiput{\psbezier(0,-2)(-1,-2)(-1,2)(0,2)\psbezier[linestyle=dashed](0,-2)(1,-2)(1,2)(0,2)}(0,0)(-4,0)(4,0)
+\rput[r](-1,0){$C$}
+\endpspicture
+\quad
+= \ \ \sum_{\sigma\in S} 
+\quad
+\psset{unit = .4cm}
+ \pspicture[shift=-3](-6,-3)(6,3)
+\psarc(-3,0){2}{-90}{90}
+\psarc(3,0){2}{90}{-90}
+\rput[r](-1.2,0){$V_\sigma$}
+\rput[l](1.2,0){$V_\sigma$}
+\psdots[dotstyle=+,dotangle=45](-1,0)(1,0)
+\rmultiput{\psline(0,0)(1,0)}(-4,2)(-4,-2)(3,2)(3,-2)
+\rmultiput{\psline[linestyle=dashed](0,0)(2,0)}(-6,2)(4,2)(-6,-2)(4,-2)
+\rmultiput{\psbezier(0,-2)(-1,-2)(-1,2)(0,2)\psbezier[linestyle=dashed](0,-2)(1,-2)(1,2)(0,2)}(-4,0)(4,0)
+\endpspicture
+\label{cscc}
+\end{align}
+In the case of a topologically trivial contour $C$, this equality amounts to using OPEs for replacing all fields within $C$ with one field $V_\sigma(x)$.
+If on the other hand $C$ is a non-contractible cycle, then this equality is nontrivial even in the absence of fields.
+If we studied a model on a torus with complex modulus $\tau$, then we could obtain a nontrivial constraint on the spectrum by applying eq. (\ref{cscc}) to the \term{partition function} (the zero-point correlation function) using two topologically inequivalent contours.
+The study of constraints of this type is sometimes called the \term{modular bootstrap}. 
+We will however only consider topologically trivial spaces (that is, surfaces of genus $g=0$), without assuming our models to be defined on spaces of nonzero genus.
+For our purposes, 
+the axiom of the existence of the OPE will therefore be general enough. 
+
+
+\subsection{Sketching the space of simple models \label{secmomo}}
+
+After discussing the general properties of two-dimensional conformal field theory, we will now describe some models which are known to satisfy the consistency conditions of the conformal bootstrap, and which are simple in the sense that their spectrums decompose into reasonable numbers of representations.
+These simple models also turn out to be the most commonly encountered in applications.  
+
+We introduce the following simple models of two-dimensional conformal field theory: 
+\begin{itemize}
+ \item For any value $c\geq 1$ of the central charge, \term{Liouville theory} is characterized as a model whose spectrum is diagonal and made of a continuum of unitary representations, each of them appearing with multiciplicity one.
+Under certain assumptions, this model can be shown to be unique.
+Liouville theory can be analytically continued to complex values of $c$, but is then no longer unitary.
+\item \term{A-series minimal models} are characterized as rational models with diagonal spectrums.
+Such a model exists only if the central charge is of the type 
+\begin{align}
+ c = 1 - 6 \frac{(p-q)^2}{pq}  \quad \mathrm{ with} \quad \bla p,q \ \mathrm{ coprime \ integers} \\ 2\leq p<q \ela 
+\label{cpq}
+\end{align}
+There are $\frac{(p-1)(q-1)}{2}$ distinct representations in the spectrum.
+The model is unitary if and only if $q=p+1$.
+Then the central charge is $c=1-\frac{6}{p(p+1)}=0,\frac12,\frac{7}{10},\cdots$.
+The unitary minimal model with $c=\frac12$ is the continuum limit of the \term{Ising model}.
+\end{itemize}
+On the $c\in\R$ line, the unitary diagonal models (with multiplicities no higher than one) are therefore located as follows:
+\begin{align}
+ \psset{unit=.6cm}
+\pspicture[shift=-2](-10,-2)(10,1)
+\psline[arrowscale=2]{->}(-11,0)(10,0)
+\rmultiput{\psline(0,-.2)(0,.2)}(-6,0)(-3,0)(-1.8,0)(-1.2,0)(-.86,0)(-.64,0)(-.5,0)(-.4,0)(-.33,0)(-.27,0)(-.23,0)
+\pspolygon*[linecolor=lightgray](-.2,-.2)(-.2,.2)(9.2,.2)(9.2,-.2)
+\pspolygon*(-.2,-.2)(-.2,.2)(0,.2)(0,-.2)
+\rput[t](-6,-.4){$0$}
+\rput[t](0,-.4){$1$}
+\rput[t](10,-.4){$c$}
+\rput[t](-3,-.6){Minimal\ Models}
+\rput[t](5,-.6){Liouville\ theory}
+\endpspicture
+\end{align}
+Other simple models include
+\begin{itemize}
+ \item the \term{linear dilaton theory} or \term{free bosonic theory}, which like Liouville theory has a diagonal, continuous spectrum and is defined for any $c\in \C$, being unitary if $c\geq 1$.
+The difference with Liouville theory is that the symmetry algebra is larger than Vir$\times$\textoverline{Vir}, so 
+that representations appear with multiplicity two in the spectrum, and the correlation functions are much simpler.
+ \item 
+\term{Minimal models} are by definition rational models, and beyond the A-series there exist two other series, called the 
+D- and E-series, whose spectrums are not diagonal.
+Central charges of minimal models obey 
+$0\leq c<1$.
+\end{itemize}
+Therefore,
+the properties of conformal field theories, starting with their very existence, crucially depend on the value of the central charge $c$ of the underlying Virasoro algebra.
+In the case of unitary theories, we observe that the size of the spectrum (as measured by the number of representations) increases with $c$, from the $c=0$ minimal model whose spectrum contains only one representation, to $c\geq 1$ Liouville theory whose spectrum contains infinitely many.
+The central charge is actually additive: given two theories with spectrums $S$ and $S'$ and central charges $c$ and $c'$, there is a natural \term{product theory} with central charge $c+c'$ and spectrum $S\otimes S'$.
+Moreover, for any rational theory which is consistent on a torus, 
+the behaviour of the number $N(\Delta)$ of states with conformal dimension $\Delta$ is given by \term{Cardy's formula},
+\begin{align}
+ \log N(\Delta) \underset{\Delta\rightarrow \infty}{\propto} \sqrt{c \Delta} \ ,
+\label{nds}
+\end{align}
+which quantitatively shows how the central charge $c$ controls the size of the spectrum.
+It can be checked that Cardy's formula is compatible with the additivity of the central charge. (See Exercise \ref{exoacf}.)
+
+\section{Exercises}
+
+
+\begin{exo}[Irreducible and indecomposable representations] 
+~\label{exoirr}
+Consider the algebra with one generator $a$ such that $a^2 = 0$.
+Consider a two-dimensional representation $R$ with a basis $(v_1,v_2)$ such that $av_1=v_2$.
+Show that $R$ is indecomposable, but not irreducible.
+Write the matrix of size two which corresponds to $a$ in the basis $(v_1,v_2)$. 
+\end{exo}
+
+\begin{exo}[Associativity in a tensor category]
+ ~\label{exoten}
+Consider a set of objects $R_i$ with two binary operations $\oplus$ (addition) and $\otimes$ (multiplication), such that 
+\begin{align}
+ R_i \otimes R_j = \bigoplus_k c_{ij}^k R_k\ ,
+\end{align}
+where $c_{ij}^k$ is a number.
+Assuming the objects $R_i$ are linearly independent, show that the associativity of the multiplication $\otimes$ amounts to a quadratic condition on the coefficients $c_{ij}^k$,
+\begin{align}
+ \sum_m c_{ij}^m c_{mk}^\ell = \sum_n c_{in}^\ell c_{jk}^n\ .
+\end{align}
+\end{exo}
+
+\begin{exo}[Associativity condition for OPE coefficients]
+ ~\label{exocccc}
+Prove the associativity condition (\ref{cccc}) for the OPE coefficients.
+To do this, expand $V_{\sigma_1}(x_1)V_{\sigma_2}(x_2)V_{\sigma_3}(x_3) $ in two different ways on the basis $(V_{\sigma_4}(x_3))_{\sigma_4\in S}$, using the associativity assumption (\ref{asso}).
+\end{exo}
+
+\begin{exo}[Group of global conformal transformations]
+ ~\label{exoiso}
+Show that the map (\ref{gisl}) is a group morphism whose kernel is the center of $SL_2(\C)$.
+Show that the group of global conformal transformations of the sphere is isomorphic to $PSL_2(\C)$. 
+\end{exo}
+
+\begin{exo}[Algebra of infinitesimal global conformal transformations]
+ ~\label{exomoz}
+Show that the generators $(\ell_{-1},\ell_0,\ell_1)$ of conformal transformations defined in eq. (\ref{elln}) correspond to infinitesimal global conformal transformations.
+To do this, expand the map $f_g$ of eq. (\ref{gisl}) near the identity, following eq. (\ref{sen}).
+\end{exo}
+
+
+\begin{exo}[Central extension of the Virasoro algebra]
+~\label{exovir}
+ Show that the commutators (\ref{vir}) of the Virasoro algebra obey the Jacobi identity, and that the central term with coefficient $c$ is the only possible central term.
+To do this, consider commutation relations of the type
+\begin{align}
+ [L_n,L_m] =(n-m)L_{n+m} + f(n,m) C  \quad , \quad [C,L_n]=0\ ,
+\end{align}
+where $C$ is a central generator and $f(n,m)$ an arbitrary antisymmetric function.
+Show that the algebra spanned by $C$ and $(L_n)_{n\in\Z}$ obeys the Jacobi identity if and only if 
+\begin{align}
+ f(n,m) = \lambda (n^3-n)\delta_{m+n,0} + (n-m)g(n+m)\ ,
+\end{align}
+for some constant $\lambda$ and function $g(n)$.
+Observe that the second term can be absorbed by the redefinition $L_n\mapsto L_n-g(n)C$.
+\end{exo}
+
+\begin{exo}[Hermitian conjugates of conformal transformations]
+ ~\label{exolnd}
+Show that the generators $\ell_n$ (\ref{elln}) of infinitesimal conformal transformations satisfy $\ell_n^\dagger =\ell_{-n}$ with respect to the scalar product (\ref{fgd}).
+\end{exo}
+
+\begin{exo}[Spectrum of $L_0$ in an indecomposable representation]
+ ~\label{exodiffint}
+Show that the eigenvalues of $L_0$ in an indecomposable representation $R$ of the Virasoro algebra differ by integers.
+To do this, use the decomposition $R=\oplus_\Delta R_\Delta$ where $R_\Delta$ is the generalized eigenspace associated to the eigenvalue $\Delta$.
+Show that  $\oplus_{n\in\Z} R_{\Delta+n}$ is a subrepresentation for any choice of $\Delta$, and conclude. 
+\end{exo}
+
+\begin{exo}[Comparing Virasoro and $\mathfrak{sl}_2$ representations]
+ ~\label{exodis}
+Consider the $\mathfrak{sl}_2$ algebra with generators $(L_0,L_1,L_{-1})$, and a vector $|v\rangle$ such that $L_1|v\rangle = 0 $ and $L_0|v\rangle = \Delta |v\rangle$.
+Repeatedly acting with $L_{-1}$ on $|v\rangle$, show that you obtain a representation of $\mathfrak{sl}_2$, where the eigenvalues of $L_0$ belong to $\Delta+\N$.
+If $R$ is a representation of the Virasoro algebra where $L_0$-eigenvalues are bounded from below, show that the decomposition of $R$ into $\mathfrak{sl}_2$ representations is of the type of eq. (\ref{rbd}).
+\end{exo}
+
+
+\begin{exo}[Number of states and additivity of the central charge]
+ ~\label{exoacf} 
+Show that Cardy's formula (\ref{nds}) is compatible with the additivity of the central charge.
+To do this, construct the action of the Virasoro algebra on the spectrum $S\otimes S'$ of the product theory by 
+\begin{align}
+ L_n^\mathrm{product} = L_n\otimes 1' + 1\otimes L_n'\ ,
+\end{align}
+where $L_n$ and $L_n'$ act on $S$ and $S'$ respectively.
+Check the relation $c^\mathrm{product} = c+c'$, and show $\Delta^\mathrm{product} = \Delta+\Delta'$.
+Assuming that Cardy's formula holds, show that computing the large $\Delta$ behaviour of the number of states $N^\mathrm{product}(\Delta)$ in the product theory amounts to finding the maximum of the function $f(\Delta') = \sqrt{c\Delta'} +\sqrt{c'(\Delta-\Delta')}$.
+\end{exo}
+
+%\pagebreak
+
+
+
+
+\printindex
+
+
+\end{document}
